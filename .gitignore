@@ -99,6 +99,7 @@ venv.bak/
 
 # mkdocs documentation
 /site
+src/python3/out/
 
 # mypy
 .mypy_cache/

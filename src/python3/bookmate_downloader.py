@@ -85,6 +85,14 @@ class Downloader:
     def delete_downloaded(self):
         shutil.rmtree(self.outdir)
 
+    def delete_css(self):
+        for root, dirs, files in os.walk(".", topdown=False):
+            for name in files:
+                if name.lower().endswith(".css"):
+                    f = open(os.path.join(root, name), "w")
+                    f.write("")
+                    f.close()
+
     def make_epub(self):
         assert os.path.exists(self.outdir), self.outdir
         epubfpath = self.outdir + ".epub"
@@ -148,6 +156,7 @@ class BookDownloader:
         return cipher.decrypt(cryptArr)
 
     def process_metadata(self, metadata):
+        self.downloader.save_bytes(b"application/epub+zip", "mimetype")
         self.downloader.save_bytes(metadata["container"], "META-INF/container.xml")  # noqa: E501
         self.downloader.save_bytes(metadata["opf"], "OEBPS/content.opf")
         self.process_opf(metadata["document_uuid"])
@@ -176,6 +185,9 @@ class BookDownloader:
     def make_epub(self):
         self.downloader.make_epub()
 
+    def delete_css(self):
+        self.downloader.delete_css()
+
 
 class Bookmate:
     def __init__(self, outdir, cookies):
@@ -198,6 +210,7 @@ if __name__ == "__main__":
     parser.add_argument("--download", type=bool, default=True)
     parser.add_argument("--delete_downloaded", type=bool, default=True)
     parser.add_argument("--make_epub", type=bool, default=True)
+    parser.add_argument("--delete_css", type=bool, default=True)
     arg = parser.parse_args()
     logformat = '%(asctime)s (%(name)s) %(levelname)s %(module)s.%(funcName)s():%(lineno)d  %(message)s'  # noqa: E501
     logging.basicConfig(level=arg.log, format=logformat)
@@ -209,6 +222,8 @@ if __name__ == "__main__":
     book = bookmate.get_book(bookid=arg.bookid)
     if arg.download:
         book.download()
+    if arg.delete_css:
+        book.delete_css()
     if arg.make_epub:
         book.make_epub()
     if arg.delete_downloaded:

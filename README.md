@@ -5,7 +5,7 @@ I think it works on Mac OS X only at the moment.
 
 Steps:
 1. Buy the subscription at bookmate.com
-2. Authorize at bookate.com with your chrome browser
+2. Authorize at bookmate.com with your chrome browser
 3. install python3
 4. Copy the bookid
 5. `python3 bookmate_downloader.py --bookid BookIdHere`

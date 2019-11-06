@@ -14,7 +14,7 @@ Steps:
 
 ## Installation details:
 ```bash
-git clone https://github.com/Rpsl/bookmate_downloader
+git clone https://github.com/ilyakharlamov/bookmate_downloader
 cd bookmate_downloader
 pip install -r requirements.txt
 python bookmate_downloader.py

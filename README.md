@@ -1,5 +1,5 @@
 # Bookmate Downloader
-Downloads books as epub from https://bookmate.com and saves them as epub format files.
+Downloads books from https://bookmate.com and saves them as epub format files.
 
 # You need to be subscribed to bookmate.com premium OR download books that are available for free !!!
 I think it works on Mac OS X only at the moment.

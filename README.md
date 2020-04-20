@@ -2,7 +2,8 @@
 Downloads books from https://bookmate.com and saves them as epub format files.
 
 # You need to be subscribed to bookmate.com premium OR download books that are available for free !!!
-I think it works on Mac OS X only at the moment.
+Works on Mac OS X, Linux.
+For Windows 10 you'll need to install WSL (Windows subsystem for linux) aka Windows Ubuntu.
 
 Steps:
 1. Buy the subscription at bookmate.com

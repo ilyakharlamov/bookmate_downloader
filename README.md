@@ -9,7 +9,7 @@ Steps:
 1. Buy the subscription at bookmate.com
 2. Authorize at bookmate.com with your chrome browser
 3. install python3
-4. Copy the bookid
+4. Copy the bookid (open the book at bookmate.com and check the url)
 5. `python3 bookmate_downloader.py --bookid BookIdHere`
 6. The epub will be downloaded to "out"
 

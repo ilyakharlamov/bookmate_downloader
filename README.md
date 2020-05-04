@@ -15,8 +15,10 @@ Steps:
 
 ## Installation details:
 ```bash
+sudo apt update
+sudo apt install -y python3-pip
 git clone https://github.com/ilyakharlamov/bookmate_downloader
 cd bookmate_downloader
-pip install -r requirements.txt
-python bookmate_downloader.py
+pip3 install -r src/python3/requirements.txt
+python3 src/python3/bookmate_downloader.py --bookid KFHDG3bp
 ```

@@ -202,6 +202,14 @@ class Bookmate:
         return BookDownloader(bookid=bookid, downloader=downloader)
 
 
+def get_cookies():
+    try:
+        cc = chrome_cookies("https://reader.bookmate.com")
+        bms = cc["bms"]
+    except Exception as e:
+        bms = input("Enter bms cookie\n(developer tools -> application -> bookmate.com -> bms -> Value) :")
+    return {"bms": bms}
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--bookid", help="bookid, take from the book url", required=True)
@@ -217,7 +225,7 @@ if __name__ == "__main__":
     if not os.path.exists(arg.outdir):
         logging.info("Creating folder %s ..." % arg.outdir)
         os.makedirs(arg.outdir)
-    cookies = chrome_cookies("https://reader.bookmate.com")
+    cookies = get_cookies()
     bookmate = Bookmate(outdir=arg.outdir, cookies=cookies)
     book = bookmate.get_book(bookid=arg.bookid)
     if arg.download:

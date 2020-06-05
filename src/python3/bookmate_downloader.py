@@ -26,7 +26,7 @@ def zipdir(path, ziph):
             if filename != "mimetype":
                 continue
             src = os.path.join(root, filename)
-            ziph.write(filename=src, arcname=os.path.relpath(src, top), compression=zipfile.ZIP_STORED)
+            ziph.write(filename=src, arcname=os.path.relpath(src, top), compress_type=zipfile.ZIP_STORED)
     for root, dirs, files in os.walk(path):
         for filename in files:
             if filename == "mimetype":

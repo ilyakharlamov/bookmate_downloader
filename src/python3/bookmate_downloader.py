@@ -9,7 +9,6 @@ import base64
 import zipfile
 from Crypto.Cipher import AES
 import logging
-from pycookiecheat import chrome_cookies
 import requests
 from html.parser import HTMLParser
 
@@ -124,6 +123,7 @@ class BookDownloader:
         self.process_metadata(metadata)
 
     def download_metadata(self, bookid):
+        logging.debug("download_metadata(%s)", bookid)
         url = "https://reader.bookmate.com/p/api/v5/books/%s/metadata/v4" % bookid  # noqa: E501
         metadata_response = self.downloader.request_url(url)
         logging.debug("metadata_response:%s ...", metadata_response.text[:40])
@@ -176,8 +176,11 @@ class BookDownloader:
                 continue
             logging.debug("fname:%s", fname)
             url = "https://reader.bookmate.com/p/a/4/d/{uuid}/contents/OEBPS/{fname}".format(uuid=uuid, fname=fname)
-            response = self.downloader.request_url(url)
-            self.downloader.save_bytes(response.content, "OEBPS/"+fname)
+            try:
+                response = self.downloader.request_url(url)
+                self.downloader.save_bytes(response.content, "OEBPS/"+fname)
+            except:
+                logging.error("cannot download from '%s'", url)
 
     def delete_downloaded(self):
         self.downloader.delete_downloaded()
@@ -204,6 +207,7 @@ class Bookmate:
 
 def get_cookies():
     try:
+        from pycookiecheat import chrome_cookies
         cc = chrome_cookies("https://reader.bookmate.com")
         bms = cc["bms"]
     except Exception as e:

@@ -106,6 +106,8 @@ class Downloader:
         zipf = zipfile.ZipFile(epubfpath, 'w', zipfile.ZIP_DEFLATED)
         zipdir(self.outdir, zipf)
         zipf.close()
+        logging.info("ebook saved as %s" % epubfpath)
+        logging.info("We recommend https://calibre-ebook.com/ for book management and conversion")
 
 
 class BookDownloader:
@@ -188,7 +190,7 @@ class BookDownloader:
                 response = self.downloader.request_url(url)
                 self.downloader.save_bytes(response.content, "OEBPS/"+fname)
             except:
-                logging.error("cannot download from '%s'", url)
+                logging.warn("cannot download from '%s'", url)
 
     def delete_downloaded(self):
         self.downloader.delete_downloaded()

@@ -216,12 +216,15 @@ class Bookmate:
 
 
 def get_cookies():
-    try:
-        from pycookiecheat import chrome_cookies
-        cc = chrome_cookies("https://reader.bookmate.com")
-        bms = cc["bms"]
-    except Exception as e:
-        bms = input("Enter bms cookie\n(developer tools -> application -> bookmate.com -> bms -> Value) :")
+    if os.environ.get('BMS') is not None: 
+        bms = os.environ.get('BMS')
+    else:
+        try:
+            from pycookiecheat import chrome_cookies
+            cc = chrome_cookies("https://reader.bookmate.com")
+            bms = cc["bms"]
+        except Exception as e:
+            bms = input("Enter bms cookie\n(developer tools -> application -> bookmate.com -> bms -> Value) :")
     return {"bms": bms}
 
 if __name__ == "__main__":

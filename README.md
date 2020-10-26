@@ -22,3 +22,9 @@ cd bookmate_downloader
 pip3 install -r src/python3/requirements.txt
 python3 src/python3/bookmate_downloader.py --bookid KFHDG3bp
 ```
+## Docker Usage (Alternative "installation")
+
+```bash
+docker build -t bookmate_dl .
+docker run -it --rm -v -e BMS=<BMS COOKIE> {PWD}/:/data bookmate_dl --bookid KFHDG3bp
+```

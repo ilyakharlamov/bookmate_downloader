@@ -23,8 +23,17 @@ pip3 install -r src/python3/requirements.txt
 python3 src/python3/bookmate_downloader.py --bookid KFHDG3bp
 ```
 ## Docker Usage (Alternative "installation")
-
 ```bash
+git clone https://github.com/ilyakharlamov/bookmate_downloader.git .
 docker build -t bookmate_dl .
-docker run -it --rm -v -e BMS=<BMS COOKIE> {PWD}/:/data bookmate_dl --bookid KFHDG3bp
+docker run -it --mount type=bind,source=$(pwd),target=/mnt/data bookmate_dl --bookid KFHDG3bp --log DEBUG --outdir /mnt/data
 ```
+
+You will be asked for 'BMS cookie', in order to get it:
+1. Go to your browser
+2. log in to bookmate.com
+3. Open developer'console (F12)
+4. Click Application
+5. Click 'Cookies' on the left
+6. Find bms on the right 
+7. Copy the value

@@ -29,6 +29,18 @@ docker build -t bookmate_dl .
 docker run -it --mount type=bind,source=$(pwd),target=/mnt/data bookmate_dl --bookid KFHDG3bp --log DEBUG --outdir /mnt/data
 ```
 
+## From Windows:
+1. Install & Run [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+2. ```cd /mnt/c/users/myusername```
+3. ```git clone https://www.github.com/ilyakharlamov/bookmate_downloader```
+4. ```cd bookmate_downloader```
+5. ```sudo apt-get update```
+6. ```sudo apt install -y python3-pip```
+7. ```pip3 install -r src/python3/requirements.txt```
+8. ```python3 src/python3/bookmate_downloader.py --bookid KFHDG3bp```
+9. After completion, you will find your book at your home folder at bookmate_downloader/out
+
+
 You will be asked for 'BMS cookie', in order to get it:
 1. Go to your browser
 2. log in to bookmate.com

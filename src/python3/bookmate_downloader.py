@@ -76,9 +76,9 @@ class Downloader:
         dirpath = os.path.dirname(fpath)
         if not os.path.exists(dirpath):
             os.makedirs(dirpath)
-        fout = open(fpath, "wb")
-        fout.write(bts)
-        fout.close()
+        with open(fpath, "wb") as fout:
+            fout.write(bts)
+            fout.close()
 
     def request_url(self, url):
         logging.debug("downloading %s ...", url)
@@ -97,16 +97,16 @@ class Downloader:
         for root, _, files in os.walk(".", topdown=False):
             for name in files:
                 if name.lower().endswith(".css"):
-                    f = open(os.path.join(root, name), "w")
-                    f.write("")
-                    f.close()
+                    with open(os.path.join(root, name), "w", encoding="UTF-8") as f:
+                        f.write("")
+                        f.close()
 
     def make_epub(self):
         assert os.path.exists(self.outdir), self.outdir
         epubfpath = self.outdir + ".epub"
-        zipf = zipfile.ZipFile(epubfpath, 'w', zipfile.ZIP_DEFLATED)
-        zipdir(self.outdir, zipf)
-        zipf.close()
+        with zipfile.ZipFile(epubfpath, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            zipdir(self.outdir, zipf)
+            zipf.close()
         logging.info("ebook saved as %s", epubfpath)
         logging.info("We recommend https://calibre-ebook.com/ for book management and conversion")
 

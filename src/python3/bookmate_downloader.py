@@ -225,7 +225,7 @@ def get_cookies():
             cc = chrome_cookies("https://reader.bookmate.com")
             bms = cc["bms"]
         except Exception:
-            bms = input("Enter bms cookie\n(developer tools -> application -> bookmate.com -> bms -> Value) :")
+            bms = input("Enter bms cookie\n(your browser -> developer tools -> application -> bookmate.com -> bms -> Value) :")
     return {"bms": bms}
 
 if __name__ == "__main__":

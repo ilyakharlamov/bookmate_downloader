@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import argparse
 from xml.etree import ElementTree as ET
@@ -190,7 +190,7 @@ class BookDownloader:
                 response = self.downloader.request_url(url)
                 self.downloader.save_bytes(response.content, "OEBPS/"+fname)
             except:
-                logging.warn("cannot download from '%s'", url)
+                logging.warning("cannot download from '%s'", url)
 
     def delete_downloaded(self):
         self.downloader.delete_downloaded()

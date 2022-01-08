@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 import os
 import argparse
-from xml.etree import ElementTree as ET
 import shutil
 import json
 import array
 import base64
 import zipfile
-from Crypto.Cipher import AES
 import logging
-import requests
+from xml.etree import ElementTree as ET
 from html.parser import HTMLParser
+import requests
+from Crypto.Cipher import AES
 
 
 def bytess(arr):
@@ -21,13 +21,13 @@ def bytess(arr):
 def zipdir(path, ziph):
     # ziph is zipfile handle
     top = path
-    for root, dirs, files in os.walk(path):
+    for root, _, files in os.walk(path):
         for filename in files:
             if filename != "mimetype":
                 continue
             src = os.path.join(root, filename)
             ziph.write(filename=src, arcname=os.path.relpath(src, top), compress_type=zipfile.ZIP_STORED)
-    for root, dirs, files in os.walk(path):
+    for root, _, files in os.walk(path):
         for filename in files:
             if filename == "mimetype":
                 continue
@@ -39,6 +39,7 @@ class ScriptParser(HTMLParser):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.__data = None
+        self.client_params = []
 
     def handle_starttag(self, tag, attrs):
         if tag == "script":
@@ -80,7 +81,7 @@ class Downloader:
         fout.close()
 
     def request_url(self, url):
-        logging.debug("downloading %s ..." % url)
+        logging.debug("downloading %s ...", url)
         response = requests.get(url, cookies=self.cookies)
         logging.debug("response:%s", response)
         assert response.status_code in [200], response.status_code
@@ -93,7 +94,7 @@ class Downloader:
         shutil.rmtree(self.outdir)
 
     def delete_css(self):
-        for root, dirs, files in os.walk(".", topdown=False):
+        for root, _, files in os.walk(".", topdown=False):
             for name in files:
                 if name.lower().endswith(".css"):
                     f = open(os.path.join(root, name), "w")
@@ -106,7 +107,7 @@ class Downloader:
         zipf = zipfile.ZipFile(epubfpath, 'w', zipfile.ZIP_DEFLATED)
         zipdir(self.outdir, zipf)
         zipf.close()
-        logging.info("ebook saved as %s" % epubfpath)
+        logging.info("ebook saved as %s", epubfpath)
         logging.info("We recommend https://calibre-ebook.com/ for book management and conversion")
 
 
@@ -189,7 +190,7 @@ class BookDownloader:
             try:
                 response = self.downloader.request_url(url)
                 self.downloader.save_bytes(response.content, "OEBPS/"+fname)
-            except:
+            except Exception:
                 logging.warning("cannot download from '%s'", url)
 
     def delete_downloaded(self):
@@ -216,34 +217,33 @@ class Bookmate:
 
 
 def get_cookies():
-    if os.environ.get('BMS') is not None: 
+    if os.environ.get('BMS') is not None:
         bms = os.environ.get('BMS')
     else:
         try:
             from pycookiecheat import chrome_cookies
             cc = chrome_cookies("https://reader.bookmate.com")
             bms = cc["bms"]
-        except Exception as e:
+        except Exception:
             bms = input("Enter bms cookie\n(developer tools -> application -> bookmate.com -> bms -> Value) :")
     return {"bms": bms}
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--bookid", help="bookid, take from the book url", required=True)
-    parser.add_argument("--outdir", help="Output directory", default="out")
-    parser.add_argument("--log", help="loglevel", type=lambda name: logging._nameToLevel[name], default="INFO", choices=logging._nameToLevel.values())
-    parser.add_argument("--download", type=bool, default=True)
-    parser.add_argument("--delete_downloaded", type=bool, default=True)
-    parser.add_argument("--make_epub", type=bool, default=True)
-    parser.add_argument("--delete_css", type=bool, default=True)
-    arg = parser.parse_args()
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument("--bookid", help="bookid, take from the book url", required=True)
+    argparser.add_argument("--outdir", help="Output directory", default="out")
+    argparser.add_argument("--log", help="loglevel", type=str, default="INFO", choices=logging._nameToLevel.keys())
+    argparser.add_argument("--download", type=bool, default=True)
+    argparser.add_argument("--delete_downloaded", type=bool, default=True)
+    argparser.add_argument("--make_epub", type=bool, default=True)
+    argparser.add_argument("--delete_css", type=bool, default=True)
+    arg = argparser.parse_args()
     logformat = '%(asctime)s (%(name)s) %(levelname)s %(module)s.%(funcName)s():%(lineno)d  %(message)s'  # noqa: E501
     logging.basicConfig(level=arg.log, format=logformat)
     if not os.path.exists(arg.outdir):
-        logging.info("Creating folder %s ..." % arg.outdir)
+        logging.info("Creating folder %s ...", arg.outdir)
         os.makedirs(arg.outdir)
-    cookies = get_cookies()
-    bookmate = Bookmate(outdir=arg.outdir, cookies=cookies)
+    bookmate = Bookmate(outdir=arg.outdir, cookies=get_cookies())
     book = bookmate.get_book(bookid=arg.bookid)
     if arg.download:
         book.download()

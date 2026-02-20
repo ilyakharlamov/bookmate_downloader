@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.8-alpine
 COPY src/python3/requirements.txt /requirements.txt
 RUN apk add --no-cache libressl-dev musl-dev libffi-dev gcc
 RUN pip3 install -r /requirements.txt
